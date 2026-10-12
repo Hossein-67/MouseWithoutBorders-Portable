@@ -17,6 +17,7 @@ internal partial class FrmMatrix
 {
     private Label receivingFolderPath;
     private CheckBox automaticTransferClose;
+    private CheckBox checkBoxWinArrowShortcut;
     private CheckBox installationStartup;
     private bool refreshingInstallation;
     private bool refreshingTransferPreference;
@@ -238,6 +239,18 @@ internal partial class FrmMatrix
 
             var shortcuts = new SettingsStack();
             AddOption(shortcuts, checkBoxEnableKeyboardShortcuts, "Off", "Assignments below are preserved while shortcuts are disabled.");
+            checkBoxWinArrowShortcut = new CheckBox
+            {
+                Name = "checkBoxWinArrowShortcut",
+                Text = "Right Win + ← / → to switch between PCs",
+                Checked = Setting.Values.UseWinArrowShortcut,
+            };
+            AddOption(shortcuts, checkBoxWinArrowShortcut, "Off", "Use Right Windows key + Left arrow for PC 1 and Right arrow for PC 2. Works alongside the existing Ctrl+Alt shortcuts.");
+            checkBoxWinArrowShortcut.CheckedChanged += (_, _) =>
+            {
+                Setting.Values.UseWinArrowShortcut = checkBoxWinArrowShortcut.Checked;
+                ShowUpdateMessage();
+            };
             labelSwitchBetweenMachine.Text = "Switch PCs, Ctrl+Alt:"; labelSwitchBetweenMachine.AutoSize = true; labelSwitchBetweenMachine.ResetFont();
             foreach (var control in new Control[] { labelSwitchBetweenMachine, radioButtonF1, radioButtonNum, radioButtonDisable })
             {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation
+// Copyright (c) Microsoft Corporation
 // The Microsoft Corporation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -78,8 +78,9 @@ namespace MouseWithoutBorders.Class
         private static KEYBDDATA hookCallbackKeybdData;
 
         private static bool winDown;
-        private static bool altDown;
-        private static bool shiftDown;
+		private static bool altDown;
+		private static bool shiftDown;
+		private static bool rightWinDown;
 
         internal static bool RealData { get; set; } = true;
 
@@ -388,8 +389,11 @@ namespace MouseWithoutBorders.Class
                 switch ((VK)vkCode)
                 {
                     case VK.LWIN:
+                        winDown = false;
+                        break;
                     case VK.RWIN:
                         winDown = false;
+                        rightWinDown = false;
                         break;
 
                     case VK.LCONTROL:
@@ -417,8 +421,11 @@ namespace MouseWithoutBorders.Class
                 switch ((VK)vkCode)
                 {
                     case VK.LWIN:
+                        winDown = true;
+                        break;
                     case VK.RWIN:
                         winDown = true;
+                        rightWinDown = true;
                         break;
 
                     case VK.LCONTROL:
@@ -636,6 +643,25 @@ namespace MouseWithoutBorders.Class
                 }
             }
 
+            // Custom shortcut: RWin + Arrow keys to switch machines
+            if (Setting.Values.UseWinArrowShortcut && rightWinDown && !CtrlDown && !altDown && !shiftDown)
+            {
+                if (vkCode == (int)VK.RIGHT)
+                {
+                    rightWinDown = false;
+                    winDown = false;
+                    if (Switch2(1))
+                        return false;
+                }
+                else if (vkCode == (int)VK.LEFT)
+                {
+                    rightWinDown = false;
+                    winDown = false;
+                    if (Switch2(0))
+                        return false;
+                }
+            }
+
             return true;
         }
 
@@ -675,7 +701,7 @@ namespace MouseWithoutBorders.Class
 
         internal void ResetLastSwitchKeys()
         {
-            CtrlDown = winDown = altDown = false;
+            CtrlDown = winDown = altDown = rightWinDown = false;
         }
     }
 }

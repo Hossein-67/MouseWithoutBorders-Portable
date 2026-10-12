@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation
+// Copyright (c) Microsoft Corporation
 // The Microsoft Corporation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -774,6 +774,29 @@ namespace MouseWithoutBorders.Class
                 lock (_loadingSettingsLock)
                 {
                     _properties.KeyboardShortcutsEnabled = value;
+                    if (!PauseInstantSaving)
+                    {
+                        SaveSettings();
+                    }
+                }
+            }
+        }
+
+        internal bool UseWinArrowShortcut
+        {
+            get
+            {
+                lock (_loadingSettingsLock)
+                {
+                    return _properties.UseWinArrowShortcut;
+                }
+            }
+
+            set
+            {
+                lock (_loadingSettingsLock)
+                {
+                    _properties.UseWinArrowShortcut = value;
                     if (!PauseInstantSaving)
                     {
                         SaveSettings();
